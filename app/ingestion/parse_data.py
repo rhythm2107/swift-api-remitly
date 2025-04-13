@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+from app.core.config import settings
 
 def parse_xlsx(file_path: str) -> pd.DataFrame:
     """
@@ -50,6 +51,26 @@ def parse_google_sheet(sheet_url: str) -> pd.DataFrame:
         f'?format=csv&id={spreadsheet_id}&gid={gid}'
     )
 
-    # Load into DataFrame
     df = pd.read_csv(csv_url)
     return df
+
+def parse_data() -> pd.DataFrame:
+    """
+    Reads the INPUT_SOURCE environment variable and calls the appropriate
+    parsing function. Default source is 'xlsx'.
+    """
+    input_source = settings.INPUT_SOURCE.lower()
+    
+    if input_source == "xlsx":
+        return parse_xlsx(settings.XLSX_FILE_PATH)
+    
+    elif input_source == "csv":
+        return parse_csv(settings.CSV_FILE_PATH)
+    
+    elif input_source == "google":
+        if not settings.GOOGLE_SHEET_URL:
+            raise ValueError("Google Sheets URL not specified in environment variable.")
+        return parse_google_sheet(settings.GOOGLE_SHEET_URL)
+    
+    else:
+        raise ValueError(f"Unsupported type of input source: {input_source}")
