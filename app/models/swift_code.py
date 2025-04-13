@@ -12,7 +12,9 @@ class SwiftCode(Base):
     country_name = Column(String(100), nullable=False)
     is_headquarter = Column(Boolean, nullable=False, server_default=text('false'))
 
-    # Ensure that ISO2 is always of length 2
     __table_args__ = (
         CheckConstraint("char_length(country_iso2) = 2", name="check_country_iso2_len"),
+        CheckConstraint("char_length(swift_code) >= 8 AND char_length(swift_code) <= 11", name="check_swift_code_len"),
+        CheckConstraint("char_length(trim(bank_name)) > 0", name="check_bank_name_not_empty"),
+        CheckConstraint("char_length(trim(country_name)) > 0", name="check_country_name_not_empty"),
     )
