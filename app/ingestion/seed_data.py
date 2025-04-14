@@ -16,6 +16,15 @@ async def seed_data() -> None:
 
     # Parse & Validate
     raw_data = parse_data()
+    
+    raw_data.rename(columns={
+    "SWIFT CODE": "swift_code",
+    "NAME": "bank_name",
+    "ADDRESS": "address",
+    "COUNTRY ISO2 CODE": "country_iso2",
+    "COUNTRY NAME": "country_name"
+    }, inplace=True)
+
     validated_data = validate_data(raw_data)
 
     async with SessionLocal() as session:
@@ -26,7 +35,7 @@ async def seed_data() -> None:
                 address=row.get("address"),
                 country_iso2=row.get("country_iso2"),
                 country_name=row.get("country_name"),
-                is_headquarter=row.get("is_headquarter", False)
+                is_headquarter=row.get("swift_code", "").strip().endswith("XXX")
             )
             session.add(swift_code)
         await session.commit()
