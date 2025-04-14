@@ -6,7 +6,7 @@ from app.ingestion.validate_data import validate_data
 from app.core.database import SessionLocal
 from app.models.swift_code import SwiftCode
 
-async def seed_data(data: pd.DataFrame) -> None:
+async def seed_data() -> None:
     """
     Seeds the Postgres database with data from a pandas DataFrame.
 
@@ -30,3 +30,12 @@ async def seed_data(data: pd.DataFrame) -> None:
             )
             session.add(swift_code)
         await session.commit()
+
+def run_seed_data() -> None:
+    """
+    Runs the asynchronous seeding operation, used in entrypoint for Docker.
+    """
+    asyncio.run(seed_data())
+
+if __name__ == "__main__":
+    run_seed_data()
