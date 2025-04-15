@@ -30,11 +30,11 @@ async def seed_data() -> None:
     async with SessionLocal() as session:
         for _, row in validated_data.iterrows():
             swift_code = SwiftCode(
-                swift_code=row.get("swift_code"),
+                swift_code=row.get("swift_code").upper(),
                 bank_name=row.get("bank_name"),
                 address=row.get("address"),
-                country_iso2=row.get("country_iso2"),
-                country_name=row.get("country_name"),
+                country_iso2=row.get("country_iso2").upper(),
+                country_name=row.get("country_name").upper(),
                 is_headquarter=row.get("swift_code", "").strip().endswith("XXX")
             )
             session.add(swift_code)
