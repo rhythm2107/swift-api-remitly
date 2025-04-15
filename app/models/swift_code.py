@@ -8,7 +8,7 @@ class SwiftCode(Base):
     swift_code = Column(String(11), unique=True, nullable=False)
     bank_name = Column(String(255), nullable=False)
     address = Column(String(255), nullable=True)
-    country_iso2 = Column(String(2), nullable=False)
+    country_iso2 = Column(String(2), nullable=False, index=True)
     country_name = Column(String(100), nullable=False)
     is_headquarter = Column(Boolean, nullable=False, server_default=text('false'))
 
