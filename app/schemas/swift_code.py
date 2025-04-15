@@ -1,5 +1,5 @@
 from typing import List, Optional, Union
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 class BranchSwiftCodeResponse(BaseModel):
     address: Optional[str] = Field(None)
@@ -8,9 +8,11 @@ class BranchSwiftCodeResponse(BaseModel):
     isHeadquarter: bool = Field(..., alias="is_headquarter")
     swiftCode: str = Field(..., alias="swift_code")
 
-    class Config:
-        from_attributes = True
-        validate_by_name = True
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        validate_by_name=True
+    )
 
 
 class FullBranchSwiftCodeResponse(BaseModel):
@@ -21,9 +23,10 @@ class FullBranchSwiftCodeResponse(BaseModel):
     isHeadquarter: bool = Field(..., alias="is_headquarter")
     swiftCode: str = Field(..., alias="swift_code")
     
-    class Config:
-        from_attributes = True
-        validate_by_name = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        validate_by_name=True
+    )
 
 
 class HeadquarterSwiftCodeResponse(BaseModel):
@@ -35,9 +38,10 @@ class HeadquarterSwiftCodeResponse(BaseModel):
     swiftCode: str = Field(..., alias="swift_code")
     branches: List[BranchSwiftCodeResponse]
 
-    class Config:
-        from_attributes = True
-        validate_by_name = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        validate_by_name=True
+    )
 
 
 class SwiftCodeCreate(BaseModel):
@@ -48,7 +52,7 @@ class SwiftCodeCreate(BaseModel):
     isHeadquarter: bool
     swiftCode: str
 
-    class Config:
+    model_config = ConfigDict(
         json_schema_extra = {
             "example": {
                 "address": "Example Street 12/34",
@@ -59,8 +63,8 @@ class SwiftCodeCreate(BaseModel):
                 "swiftCode": "EXAMPLEXXX" # Ends with "XXX" = Headquarter
             }
         }
-
-
+    )
+    
 class CountrySwiftCodesResponse(BaseModel):
     countryISO2: str
     countryName: str
