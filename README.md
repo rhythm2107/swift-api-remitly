@@ -103,8 +103,10 @@ flowchart TD
     end
 
     subgraph Docker Compose
-        ComposeMain[docker-compose.yml\nProduction] --> App
-        ComposeTest[docker-compose.test.yml\nTesting] --> Tests
+        ComposeMain[docker-compose.yml
+Production] --> App
+        ComposeTest[docker-compose.test.yml
+Testing] --> Tests
     end
 
     subgraph Application
@@ -134,7 +136,8 @@ flowchart TD
     end
 
     %% Clarification about Testing DB
-    Tests -.->|Empty Database,\nno seeding| DB
+    Tests -.->|Empty Database,
+no seeding| DB
 ```
 
 
