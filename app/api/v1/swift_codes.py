@@ -44,7 +44,7 @@ async def get_swift_code(swift_code: str, db: AsyncSession = Depends(get_db)) ->
         branch_records = branch_result.scalars().all()
         
         # Create branch responses using the model that skips countryName
-        branches = [BranchSwiftCodeResponse.from_orm(branch) for branch in branch_records]
+        branches = [BranchSwiftCodeResponse.model_validate(branch) for branch in branch_records]
         
         base_data = {
             "address": record.address,
@@ -60,7 +60,7 @@ async def get_swift_code(swift_code: str, db: AsyncSession = Depends(get_db)) ->
     # Branch Logic
     else:
         # Using FullBranchSwiftCodeResponse model instead, to include CountryName
-        branch_response = FullBranchSwiftCodeResponse.from_orm(record)
+        branch_response = FullBranchSwiftCodeResponse.model_validate(record)
         return JSONResponse(content=branch_response.model_dump(by_alias=False))
 
 
@@ -80,7 +80,7 @@ async def get_swift_codes_by_country(country_iso2: str, db: AsyncSession = Depen
         )
 
     country_name = records[0].country_name  # Assuming DB consistency (potential edge case, refer to README)
-    swift_codes = [BranchSwiftCodeResponse.from_orm(record) for record in records]
+    swift_codes = [BranchSwiftCodeResponse.model_validate(record) for record in records]
 
     return CountrySwiftCodesResponse(
         countryISO2=country_iso2.upper(),

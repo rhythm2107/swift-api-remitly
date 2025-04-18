@@ -33,4 +33,4 @@ services:
       - -c
       - |
         /wait-for-it.sh db:5432 -t 30 -- echo "DB is up, running tests…" \
-        && poetry run pytest -q
+        && poetry run pytest
