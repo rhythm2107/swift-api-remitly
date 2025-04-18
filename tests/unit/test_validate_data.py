@@ -1,5 +1,4 @@
 import pandas as pd
-import pytest
 from app.ingestion.validate_data import validate_data
 
 def test_validate_data_valid():
