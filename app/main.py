@@ -9,7 +9,8 @@ def create_app() -> FastAPI:
     async def lifespan(app: FastAPI):
         if settings.DEV_MODE.lower() == "false":
             print("Seeding data...")
-            await seed_data()
+            # This is only for local usage, docker uses seed_data in entrypoint.sh
+            # await seed_data()
 
         if settings.DEV_MODE.lower() == "true":
             print("Skipping seed_data() for test environment")
