@@ -1,18 +1,26 @@
 version: '3.9'
+
 services:
   db:
     image: postgres:15
+    tmpfs:
+      - /var/lib/postgresql/data
     container_name: swift_db
     env_file:
       - .env
     ports:
       - "5432:5432"
-
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 2s
+      retries: 10
+      
   api:
     build: .
     container_name: swift_api
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     env_file:
       - .env
     ports:
