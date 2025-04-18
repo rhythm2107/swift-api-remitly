@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
-from app.core.database import SessionLocal
+from app.core.database import get_db
 from app.models.swift_code import SwiftCode
 from app.schemas.swift_code import (
     BranchSwiftCodeResponse,
@@ -16,11 +16,6 @@ from app.schemas.swift_code import (
 )
 
 router = APIRouter()
-
-# Function for dependency injection in endpoints
-async def get_db():
-    async with SessionLocal() as session:
-        yield session
 
 @router.get("/{swift_code}")
 async def get_swift_code(swift_code: str, db: AsyncSession = Depends(get_db)) -> JSONResponse:
@@ -60,13 +55,13 @@ async def get_swift_code(swift_code: str, db: AsyncSession = Depends(get_db)) ->
             "swift_code": record.swift_code,
         }
         hq_response = HeadquarterSwiftCodeResponse(**base_data, branches=branches)
-        return JSONResponse(content=hq_response.dict(by_alias=False))
+        return JSONResponse(content=hq_response.model_dump(by_alias=False))
     
     # Branch Logic
     else:
         # Using FullBranchSwiftCodeResponse model instead, to include CountryName
         branch_response = FullBranchSwiftCodeResponse.from_orm(record)
-        return JSONResponse(content=branch_response.dict(by_alias=False))
+        return JSONResponse(content=branch_response.model_dump(by_alias=False))
 
 
 @router.get("/country/{country_iso2}", response_model=CountrySwiftCodesResponse)
