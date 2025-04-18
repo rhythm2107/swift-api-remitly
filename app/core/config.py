@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     CSV_FILE_PATH: str = "data/swift_codes.csv"
     GOOGLE_SHEET_URL: str
     TEST_DATABASE_URL: str
-    ENV: str
+    DEV_MODE: str
 
     model_config = ConfigDict(
         env_file = ".env",
