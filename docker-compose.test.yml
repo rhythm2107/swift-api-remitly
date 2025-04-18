@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: swift_db_test
+    environment:
+      POSTGRES_USER: remitly
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: swiftcodes_test
+    tmpfs:
+      - /var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "remitly", "-d", "swiftcodes_test"]
+      interval: 2s
+      retries: 10
+
+  api:
+    build: .
+    container_name: swift_api_test
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DEV_MODE: "true"
+      TEST_DATABASE_URL: postgresql+asyncpg://remitly:password@db:5432/swiftcodes_test
+
+    # We override the original entrypoint.sh from Dockerfile with a new one for tests
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /wait-for-it.sh db:5432 -t 30 -- echo "DB is up, running tests…" \
+        && poetry run pytest -q
